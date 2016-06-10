@@ -1,8 +1,9 @@
 #include "generator.h"
 
-Generator::Generator(int K, int range, string output) {
+Generator::Generator(int K, int range1, int range2, string output) {
     k = K;
-    r = range;
+    r1 = range1;
+    r2 = range2;
     file = output;
     dictionary = vector<int>(K);
 }
@@ -11,12 +12,21 @@ int Generator::getK() {
     return k;
 }
 
-int Generator::getRange() {
-    return r;
+pair<int, int> Generator::getRange() {
+    return make_pair(r1,r2);
 }
 
 string Generator::getOutputFile() {
     return file;
+}
+
+void Generator::changeK(int K) {
+    k = K;
+}
+
+void Generator::changeRange(int range1, int range2) {
+    r1 = range1;
+    r2 = range2;
 }
 
 void Generator::changeOutputFile(string output) {
@@ -30,10 +40,10 @@ void Generator::generateWords(int seed) {
     else srand(time(0));
 
     ofstream output;
-    output.open(file + ".txt");
+    output.open(file);
 
     for(int i = 0; i < k; ++i) {
-        int x = rand() % r;
+        int x = rand() % r2 + r1;
         dictionary[i] = x;
         output << x; output << "\n";
     }

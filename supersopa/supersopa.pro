@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    generator.cpp
+    generator.cpp \
+    board.cpp
 
 HEADERS += \
-    generator.h
+    generator.h \
+    board.h
 

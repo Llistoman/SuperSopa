@@ -14,16 +14,19 @@ class Generator
 {
 private:
     int k;
-    int r;
+    int r1;
+    int r2;
     vector<int> dictionary;
     string file;
 
 public:
-    Generator(int K, int range, string output);
+    Generator(int K, int range1, int range2, string output);
     int getK();
-    int getRange();
+    pair<int,int> getRange();
     vector<int> getWords();
     string getOutputFile();
+    void changeK(int K);
+    void changeRange(int range1, int range2);
     void changeOutputFile(string output);
     void generateWords(int seed);
 
