@@ -15,17 +15,23 @@ class Board
 private:
     int n;
     string file;
-    vector<vector<int> > board;
+    vector<vector<char> > board;
 
 public:
+    struct Cell {
+        char val;
+        int i;
+        int j;
+    };
+
     Board(int N, string output);
     int getN();
     string getOutputFile();
     void generateBoard(int seed);
     void changeN(int N);
     void changeOutputFile(string output);
-    int position(int i, int j);
-    vector<int> arround(int i, int j);
+    char position(int i, int j);
+    vector<Cell> arround(int i, int j);
 
 };
 

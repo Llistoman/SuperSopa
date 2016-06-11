@@ -1,5 +1,5 @@
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#ifndef DICTIONARY_H
+#define DICTIONARY_H
 
 #include <math.h>
 #include <stdlib.h>
@@ -10,20 +10,21 @@
 
 using namespace std;
 
-class Generator
+class Dictionary
 {
 private:
     int k;
     int r1;
     int r2;
-    vector<int> dictionary;
+    vector<string> dictionary;
     string file;
 
 public:
-    Generator(int K, int range1, int range2, string output);
+    Dictionary(int K, int range1, int range2, string output);
     int getK();
     pair<int,int> getRange();
-    vector<int> getWords();
+    vector<string> getWords();
+    string getWord(int i);
     string getOutputFile();
     void changeK(int K);
     void changeRange(int range1, int range2);
@@ -32,4 +33,4 @@ public:
 
 };
 
-#endif // GENERATOR_H
+#endif // DICTIONARY_H

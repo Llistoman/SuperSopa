@@ -3,7 +3,7 @@
 Board::Board(int N, string output) {
     n = N;
     file = output;
-    board = vector<vector<int> > (n, vector<int>(n));
+    board = vector<vector<char> > (n, vector<char>(n));
 }
 
 int Board::getN() {
@@ -12,6 +12,19 @@ int Board::getN() {
 
 string Board::getOutputFile() {
     return file;
+}
+
+char itoc(int x) {
+    if (x == 0) return '0';
+    if (x == 1) return '1';
+    if (x == 2) return '2';
+    if (x == 3) return '3';
+    if (x == 4) return '4';
+    if (x == 5) return '5';
+    if (x == 6) return '6';
+    if (x == 7) return '7';
+    if (x == 8) return '8';
+    if (x == 9) return '9';
 }
 
 void Board::generateBoard(int seed) {
@@ -26,8 +39,9 @@ void Board::generateBoard(int seed) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             int x = rand() % 10;
-            board[i][j] = x;
-            output << x; output << " ";
+            char y = itoc(x);
+            board[i][j] = y;
+            output << y; output << " ";
         }
         output << "\n";
     }
@@ -41,17 +55,23 @@ void Board::changeOutputFile(string output) {
     file = output;
 }
 
-int Board::position(int i, int j) {
+char Board::position(int i, int j) {
     return board[i][j];
 }
 
-vector<int> Board::arround(int i, int j) {
-    vector<int> res = vector<int>(8,-1);
+vector<Board::Cell> Board::arround(int i, int j) {
+    Cell aux;
+    aux.val = '0';
+    aux.i = -1;
+    aux.j = -1;
+    vector<Cell> res = vector<Cell>(8,aux);
     int index = 0;
     for (int x = i-1; x <= i+1; ++x) {
         for (int y = j-1; y <= j+1; ++y) {
             if ((x != i or y != j) and x >= 0 and x < n and y >= 0 and y < n) {
-                res[index] = board[x][y];
+                res[index].val = board[x][y];
+                res[index].i = x;
+                res[index].j = y;
                 ++index;
             }
         }
