@@ -5,7 +5,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     dictionary.cpp \
-    board.cpp
+    board.cpp \
+    naive.cpp
 
 HEADERS += \
     dictionary.h \

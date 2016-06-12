@@ -61,18 +61,14 @@ char Board::position(int i, int j) {
 
 vector<Board::Cell> Board::arround(int i, int j) {
     Cell aux;
-    aux.val = '0';
-    aux.i = -1;
-    aux.j = -1;
-    vector<Cell> res = vector<Cell>(8,aux);
-    int index = 0;
+    vector<Cell> res;
     for (int x = i-1; x <= i+1; ++x) {
         for (int y = j-1; y <= j+1; ++y) {
-            if ((x != i or y != j) and x >= 0 and x < n and y >= 0 and y < n) {
-                res[index].val = board[x][y];
-                res[index].i = x;
-                res[index].j = y;
-                ++index;
+            if (not (x == i and y == j) and x >= 0 and x < n and y >= 0 and y < n) {
+                aux.val = board[x][y];
+                aux.i = x;
+                aux.j = y;
+                res.push_back(aux);
             }
         }
     }
