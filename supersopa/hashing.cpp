@@ -45,7 +45,7 @@ int hash_read(string s, int n) {
 }
 
 void by_bloom(Dictionary & dict, Board & board, int hash_method) {
-  int found = 0;
+  int found_words = 0;
   int score = 0;
   int comparisons = 0;
   int max_length = 0;
@@ -62,7 +62,7 @@ void by_bloom(Dictionary & dict, Board & board, int hash_method) {
     //SUM OF BASE 31 DIGITS
     case 1:
       hdict = vector<bool>(board.getN(), false);
-      for(int i=0; i<hdict.size(); i++) {
+      for(int i=0; i<dict.getK(); i++) {
         hdict[hash_sum(dict.getWord(i), board.getN())] = true;
         if(dict.getWord(i).length() > max_length) max_length = dict.getWord(i).length();
       }
@@ -99,23 +99,35 @@ void by_bloom(Dictionary & dict, Board & board, int hash_method) {
 
   vector<vector<bool> > used = vector<vector<bool> >(board.getN(), vector<bool>(board.getN(), false));
 
+  bool found = false;
+
   for(int i = 0; i < board.getN(); i++) {
     for(int j = 0; i < board.getN(); j++) {
       used[i][j] = true;
-      check_for_word(""+board.position(i,j), dict, hdict, board.around(i,j), &used, hash, max_length);
+      found = check_for_word(""+board.position(i,j), board, dict, hdict, board.around(i,j), used, hash, max_length);
+      if(!found) used[i][j] = false;
+      else {
+        found = false;
+        found_words++;
+      }
     }
   }
 }
 
-bool check_for_word(string s, const Dictionary &dict, const vector<bool> &hdict, vector<Board::Cell> v, vector<vector<bool> >* used, int(*hash)(string,int), const int &l) {
+bool check_for_word(string s, Board &board, const Dictionary &dict, const vector<bool> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, int(*hash)(string,int), const int &l) {
   bool found = false;
-  if(hdict[hash(s,hdict.size())]) {
-    return true;
-  }
+
   if(s.length() < l) {
     for(int i = 0; i < v.size(); i++) {
-
+      used[v[i].i][v[i].j] = true;
+      found = check_for_word(s+v[i].val, board, dict, hdict, board.around(v[i].i,v[i].j), used, hash, l);
+      if(!found) used[v[i].i][v[i].j] = false;
+      else return found;
     }
+  }
+
+  if(hdict[hash(s,hdict.size())]) {
+    return true;
   }
 
   return false;
