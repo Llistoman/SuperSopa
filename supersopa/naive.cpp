@@ -5,17 +5,17 @@ void naive(Dictionary & dictionary, Board & board) {
     int score = 0;
     int comparisons = 0;
     vector<vector<bool> > visited(board.getN(), vector<bool>(board.getN(), false));
+    vector<bool> check(dictionary.getK(),false);
 
     const clock_t begin = clock();
 
     for (int w = 0; w < dictionary.getK(); ++w) {
 
-        bool word_found = false;
         string word = dictionary.nextWord();
         stack<pair<int,int> > pos;
 
-        for (int i = 0; i < board.getN() and not word_found; ++i) {
-            for (int j = 0; j < board.getN() and not word_found; ++j) {
+        for (int i = 0; i < board.getN() and not check[w]; ++i) {
+            for (int j = 0; j < board.getN() and not check[w]; ++j) {
                 ++comparisons;
 
                 if (not visited[i][j] and board.position(i,j) == word[0]) {
@@ -27,11 +27,13 @@ void naive(Dictionary & dictionary, Board & board) {
                         //continue while finding word
                         bool next = false;
                         int k = 0;
+                        int aux_i = i;
+                        int aux_j = j;
                         while (not next and k < adj.size()) {
-                            if (not visited[adj[k].i][adj[k].j] and word[index] == adj[k].val) {
+                            if (not visited[adj[k].i][adj[k].j] and word[index] == adj[k].val and not (adj[k].i == i and adj[k].j == j)) {
                                 next = true;
-                                int aux_i = adj[k].i;
-                                int aux_j = adj[k].j;
+                                aux_i = adj[k].i;
+                                aux_j = adj[k].j;
                                 pos.push(make_pair(aux_i,aux_j));
                                 adj = board.around(aux_i,aux_j);
                             }
@@ -44,28 +46,32 @@ void naive(Dictionary & dictionary, Board & board) {
                     if (index == word.size()) {
                         ++found;
                         score += word.size();
-                        word_found = true;
+                        check[w] = true;
+                        cout << word << endl;
                         //set positions to true on visited
                         while(not pos.empty()) {
-                            cout << board.position(pos.top().first, pos.top().second);
+                            //cout << board.position(pos.top().first, pos.top().second);
                             visited[pos.top().first][pos.top().second] = true;
                             pos.pop();
                         }
                         cout << endl;
                     }
                     else {
-                        stack<pair<int,int> > aux;
+                        /*stack<pair<int,int> > aux;
                         pos = aux;
+                        pos.push(make_pair(i,j));*/
+                        pos.pop();
                     }
                 }
             }
         }
     }
 
-
       for(int i = 0; i < board.getN(); i++) {
         for(int j = 0; j < board.getN(); j++) {
-          cout << " " << visited[i][j];
+           cout << " ";
+           if(not visited[i][j]) cout << "-";
+           else cout << board.position(i,j);
         }
         cout << endl;
       }

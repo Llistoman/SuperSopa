@@ -139,7 +139,9 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method) {
 
   for(int i = 0; i < board.getN(); i++) {
     for(int j = 0; j < board.getN(); j++) {
-      cout << " " << used[i][j];
+       cout << " ";
+       if(not used[i][j]) cout << "-";
+       else cout << board.position(i,j);
     }
     cout << endl;
   }
