@@ -1,10 +1,4 @@
-
-#include <iostream>
-#include "dictionary.h"
-#include "board.h"
-#include <stack>
-
-using namespace std;
+#include "naive.h"
 
 void greedy(Dictionary & dictionary, Board & board) {
     int found = 0;

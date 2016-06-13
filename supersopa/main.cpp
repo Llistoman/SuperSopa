@@ -1,7 +1,7 @@
 #include <iostream>
 #include "dictionary.h"
 #include "board.h"
-#include "naive.cpp"
+#include "naive.h"
 
 using namespace std;
 
@@ -32,4 +32,3 @@ int main()
 
     greedy(dictionary,board);
 }
-
