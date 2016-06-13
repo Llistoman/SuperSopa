@@ -4,6 +4,10 @@ Node::Node() {
      mContent = ' '; mMarker = false;
 }
 
+Node::~Node() {
+  //free space
+}
+
 char Node::content() {
    return mContent;
 }
@@ -50,6 +54,9 @@ void Node::deleteChild(Node* child) {
     int i = 0;
     while(i<mChildren.size() and mChildren[i] != child) i++;
     while(i<mChildren.size()-1) mChildren[i] = mChildren[i+1];
+    Node* tmp = mChildren.back();
+    delete tmp;
+    tmp = NULL;
     mChildren.pop_back();
 }
 
