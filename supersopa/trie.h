@@ -35,6 +35,7 @@ public:
     ~Trie();
     void addWord(string s);
     bool searchWord(string s);
+    bool isPrefix(string s);
     void deleteWord(string s);
 };
 

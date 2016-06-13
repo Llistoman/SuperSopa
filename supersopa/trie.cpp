@@ -81,6 +81,23 @@ void Trie::addWord(string s)
     }
 }
 
+bool Trie::isPrefix(string s)
+{
+    Node* current = root;
+
+    while ( current != NULL )
+    {
+        for ( int i = 0; i < s.length(); i++ )
+        {
+            Node* tmp = current->findChild(s[i]);
+            if ( tmp == NULL )
+                return false;
+            current = tmp;
+        }
+        return true;
+    }
+}
+
 
 bool Trie::searchWord(string s)
 {

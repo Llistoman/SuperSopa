@@ -1,6 +1,8 @@
 #include <iostream>
 #include "dictionary.h"
 #include "board.h"
+#include "trie.h"
+#include "hashing.h"
 #include "naive.h"
 
 using namespace std;
