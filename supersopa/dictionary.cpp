@@ -5,19 +5,31 @@ Dictionary::Dictionary(int K, int range1, int range2, string output) {
     r1 = range1;
     r2 = range2;
     file = output;
-    dictionary = vector<string>(K);
+    dictionary = list<string>();
 }
 
 int Dictionary::getK() {
     return k;
 }
 
-vector<string> Dictionary::getWords() {
+list<string> Dictionary::getWords() {
     return dictionary;
 }
 
 string Dictionary::getWord(int i) {
-    return dictionary[i];
+    list<string>::iterator j = dictionary.begin();
+    int k = 0;
+    while (k != i and j != dictionary.end()) {
+        ++k;
+        ++j;
+    }
+    return *j;
+}
+
+string Dictionary::nextWord() {
+    string res = *it;
+    ++it;
+    return res;
 }
 
 pair<int, int> Dictionary::getRange() {
@@ -53,8 +65,17 @@ void Dictionary::generateWords(int seed) {
     for(int i = 0; i < k; ++i) {
         int x = rand() % (r2 - r1) + r1;
         string y = to_string(x);
-        dictionary[i] = y;
+        dictionary.push_front(y);
         output << y; output << "\n";
     }
     output.close();
+    it = dictionary.begin();
+}
+
+void Dictionary::eraseWord(string w) {
+    list<string>::iterator j = dictionary.begin();
+    while (*j != w and j != dictionary.end()) {
+        ++j;
+    }
+    if(j != dictionary.end()) dictionary.erase(j);
 }

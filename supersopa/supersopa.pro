@@ -9,11 +9,14 @@ SOURCES += main.cpp \
     dictionary.cpp \
     naive.cpp \
     trie.cpp \
-    hashing.cpp
+    hashing.cpp \
+    trie_alg.cpp
 
 HEADERS += \
     board.h \
     dictionary.h \
     trie.h \
-    hashing.h
+    hashing.h \
+    naive.h \
+    trie_alg.h
 

@@ -1,6 +1,6 @@
 #include "naive.h"
 
-void greedy(Dictionary & dictionary, Board & board) {
+void naive(Dictionary & dictionary, Board & board) {
     int found = 0;
     int score = 0;
     int comparisons = 0;
@@ -11,7 +11,7 @@ void greedy(Dictionary & dictionary, Board & board) {
     for (int w = 0; w < dictionary.getK(); ++w) {
 
         bool word_found = false;
-        string word = dictionary.getWord(w);
+        string word = dictionary.nextWord();
         stack<pair<int,int> > pos;
 
         for (int i = 0; i < board.getN() and not word_found; ++i) {

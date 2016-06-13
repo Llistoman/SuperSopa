@@ -30,5 +30,5 @@ int main()
     board.generateBoard(seed);
     dictionary.generateWords(seed);
 
-    greedy(dictionary,board);
+    naive(dictionary,board);
 }

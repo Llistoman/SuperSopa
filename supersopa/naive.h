@@ -1,3 +1,5 @@
+#ifndef NAIVE_H
+#define NAIVE_H
 
 #include <iostream>
 #include "dictionary.h"
@@ -6,4 +8,6 @@
 
 using namespace std;
 
-void greedy(Dictionary & dictionary, Board & board);
+void naive(Dictionary & dictionary, Board & board);
+
+#endif // NAIVE_H
