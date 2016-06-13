@@ -24,6 +24,14 @@ public:
         int j;
     };
 
+    struct Stats {
+      int found;
+      int comparisons;
+      int score;
+      clock_t clock_begin;
+      clock_t clock_end;
+    };
+
     Board(int N, string output);
     int getN();
     string getOutputFile();

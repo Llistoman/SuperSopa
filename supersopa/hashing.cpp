@@ -65,17 +65,14 @@ int custom_hash(string s, int n, int m) {
   }
 }
 
-void by_bloom(Dictionary & dictionary, Board & board, int hash_method) {
-  int found_words = 0;
-  int score = 0;
-  int comparisons = 0;
+void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats) {
   int max_length = 0;
   int hashN = 0;
   int repetitions = 0;
   Dictionary dict = dictionary;
   vector<int> hdict;
 
-  const clock_t begin = clock();
+  stats.clock_begin = clock();
   cout << "Hashing method used: ";
 
   switch(hash_method) {
@@ -125,38 +122,44 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method) {
   for(int i = 0; i < board.getN(); i++) {
     for(int j = 0; j < board.getN(); j++) {
       if(!used[i][j]) {
+        stats.comparisons++;
         used[i][j] = true;
         word = board.position(i,j);
-        found = check_for_word(word, board, dict, hdict, board.around(i,j), used, hash_method, max_length);
+        found = check_for_word(word, board, dict, hdict, board.around(i,j), used, hash_method, max_length, stats);
         if(!found) used[i][j] = false;
         else {
           found = false;
-          found_words++;
+          stats.found++;
         }
       }
     }
   }
 
-  const clock_t end = clock();
-  int time = int(end - begin) / CLOCKS_PER_SEC;
-  cout << endl;
-  cout << "Time spent: " << time/60 << " minutes " << time%60 << " seconds" << endl;
-  cout << "Found: " << found_words  << " out of " << dict.getK() << " total words" << endl;
-  cout << "Score: " << score << endl;
-  cout << "Comparisons: " << comparisons << endl;
-  cout << "---------------" << endl;
+  /*  SOLUTION:
+    for(int i=0; i<board.getN(); i++) {
+    for(int j=0; j<board.getN(); j++) {
+      cout << " ";
+      if(used[i][j]) cout << board.position(i,j);
+      else cout << "-";
+    }
+    cout << endl;
+  }*/
+
+  stats.clock_end = clock();
 }
 
-bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &hash_method, const int &l) {
+bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &hash_method, const int &l, Board::Stats & stats) {
   bool found = false;
   string s = "";
 
   if(word.size() < l) {
     for(int i = 0; i < v.size(); i++) {
       if(not used[v[i].i][v[i].j]) {
+        stats.comparisons++;
+
         used[v[i].i][v[i].j] = true;
         s = word + v[i].val;
-        found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, hash_method, l);
+        found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, hash_method, l, stats);
         if(!found) used[v[i].i][v[i].j] = false;
         else return true;
       }
@@ -167,6 +170,8 @@ bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hd
     found = search_word(word, dict);
     if(found) {
       hdict[custom_hash(word, hdict.size(), hash_method)]--;
+
+      stats.score += word.size();
     }
     return found;
   }
