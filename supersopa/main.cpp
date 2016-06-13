@@ -31,4 +31,6 @@ int main()
     dictionary.generateWords(seed);
 
     naive(dictionary,board);
+
+    for(int i = 0; i < 3; i++) by_bloom(dictionary, board, i);
 }
