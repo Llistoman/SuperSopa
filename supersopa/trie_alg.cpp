@@ -20,6 +20,7 @@ void trie_alg(Dictionary & dictionary, Board & board) {
     int comparisons = 0;
     vector<vector<bool> > visited(board.getN(), vector<bool>(board.getN(), false));
 
+    //init trie
     Trie* trie = new Trie();
     for(int w = 0; w < dictionary.getK(); ++w) {
         trie->addWord(dictionary.getWord(w));
