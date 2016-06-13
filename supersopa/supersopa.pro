@@ -7,9 +7,13 @@ CONFIG += c++11
 SOURCES += main.cpp \
     board.cpp \
     dictionary.cpp \
-    naive.cpp
+    naive.cpp \
+    trie.cpp \
+    hashing.cpp
 
 HEADERS += \
     board.h \
-    dictionary.h
+    dictionary.h \
+    trie.h \
+    hashing.h
 
