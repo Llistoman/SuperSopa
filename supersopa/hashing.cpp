@@ -137,15 +137,6 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method) {
     }
   }
 
-  for(int i = 0; i < board.getN(); i++) {
-    for(int j = 0; j < board.getN(); j++) {
-       cout << " ";
-       if(not used[i][j]) cout << "-";
-       else cout << board.position(i,j);
-    }
-    cout << endl;
-  }
-
   const clock_t end = clock();
   int time = int(end - begin) / CLOCKS_PER_SEC;
   cout << endl;
@@ -187,7 +178,6 @@ bool search_word(string s, Dictionary &dict) {
   list<string> words = dict.getWords();
   for(int i=0; i<words.size(); i++) {
     if(s == dict.getWord(i)) {
-      cout << "Found good word: " << s << endl;
       dict.eraseWord(s);
       return true;
     }

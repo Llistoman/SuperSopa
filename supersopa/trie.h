@@ -20,9 +20,11 @@ public:
     void setContent(char c);
     bool wordMarker();
     void setWordMarker();
+    void unsetWordMarker();
     Node* findChild(char c);
     void appendChild(Node* child);
     vector<Node*> children();
+    void deleteChild(Node* child);
 };
 
 class Trie {

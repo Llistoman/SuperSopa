@@ -20,6 +20,10 @@ void Node::setWordMarker() {
     mMarker = true;
 }
 
+void Node::unsetWordMarker() {
+    mMarker = false;
+}
+
 void Node::appendChild(Node *child) {
     mChildren.push_back(child);
 }
@@ -40,6 +44,13 @@ Node* Node::findChild(char c)
     }
 
     return NULL;
+}
+
+void Node::deleteChild(Node* child) {
+    int i = 0;
+    while(i<mChildren.size() and mChildren[i] != child) i++;
+    while(i<mChildren.size()-1) mChildren[i] = mChildren[i+1];
+    mChildren.pop_back();
 }
 
 Trie::Trie()
@@ -120,4 +131,29 @@ bool Trie::searchWord(string s)
     }
 
     return false;
+}
+
+bool deleteHelper(Node *current, string s, int level, int l)
+{
+    if (current != NULL) {
+        if (level == l) {
+            if (current->wordMarker()) {
+                current->unsetWordMarker();
+                if (current->children().size() == 0) return true;
+                else return false;
+            }
+        }
+        else {
+            Node *child = current->findChild(s[level]);
+            if(deleteHelper(child,s,level+1,l)) {
+                return (current->children().size() <= 0);
+            }
+        }
+    }
+}
+
+void Trie::deleteWord(string s)
+{
+    int l = s.size();
+    if(l > 0) deleteHelper(root,s,0,l);
 }

@@ -3,6 +3,7 @@
 #include "board.h"
 #include "trie.h"
 #include "hashing.h"
+#include "trie_alg.h"
 #include "naive.h"
 
 using namespace std;
@@ -35,4 +36,6 @@ int main()
     naive(dictionary,board);
 
     for(int i = 0; i < 3; i++) by_bloom(dictionary, board, i);
+    trie_alg(dictionary,board);
+
 }

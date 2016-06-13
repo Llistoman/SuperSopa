@@ -47,34 +47,19 @@ void naive(Dictionary & dictionary, Board & board) {
                         ++found;
                         score += word.size();
                         check[w] = true;
-                        cout << word << endl;
                         //set positions to true on visited
                         while(not pos.empty()) {
-                            //cout << board.position(pos.top().first, pos.top().second);
                             visited[pos.top().first][pos.top().second] = true;
                             pos.pop();
                         }
-                        cout << endl;
                     }
                     else {
-                        /*stack<pair<int,int> > aux;
-                        pos = aux;
-                        pos.push(make_pair(i,j));*/
                         pos.pop();
                     }
                 }
             }
         }
     }
-
-      for(int i = 0; i < board.getN(); i++) {
-        for(int j = 0; j < board.getN(); j++) {
-           cout << " ";
-           if(not visited[i][j]) cout << "-";
-           else cout << board.position(i,j);
-        }
-        cout << endl;
-      }
 
     const clock_t end = clock();
     int time = int(end - begin) / CLOCKS_PER_SEC;
