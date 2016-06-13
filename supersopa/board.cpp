@@ -34,7 +34,7 @@ void Board::generateBoard(int seed) {
     else srand(time(0));
 
     ofstream output;
-    output.open(file);
+    output.open(file.c_str());
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -59,7 +59,7 @@ char Board::position(int i, int j) {
     return board[i][j];
 }
 
-vector<Board::Cell> Board::arround(int i, int j) {
+vector<Board::Cell> Board::around(int i, int j) {
     Cell aux;
     vector<Cell> res;
     for (int x = i-1; x <= i+1; ++x) {

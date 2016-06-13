@@ -26,7 +26,7 @@ void greedy(Dictionary & dictionary, Board & board) {
 
                 if (not visited[i][j] and board.position(i,j) == word[0]) {
                     pos.push(make_pair(i,j));
-                    vector<Board::Cell> adj = board.arround(i,j);
+                    vector<Board::Cell> adj = board.around(i,j);
                     bool end = false;
                     int index = 1;
                     while (not end and index < word.size()) {
@@ -39,7 +39,7 @@ void greedy(Dictionary & dictionary, Board & board) {
                                 int aux_i = adj[k].i;
                                 int aux_j = adj[k].j;
                                 pos.push(make_pair(aux_i,aux_j));
-                                adj = board.arround(aux_i,aux_j);
+                                adj = board.around(aux_i,aux_j);
                             }
                             ++k;
                             ++comparisons;

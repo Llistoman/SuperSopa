@@ -1,14 +1,15 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
+CONFIG += c++11
 
 SOURCES += main.cpp \
-    dictionary.cpp \
     board.cpp \
+    dictionary.cpp \
     naive.cpp
 
 HEADERS += \
-    dictionary.h \
-    board.h
+    board.h \
+    dictionary.h
 

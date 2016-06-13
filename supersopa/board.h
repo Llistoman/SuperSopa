@@ -31,7 +31,7 @@ public:
     void changeN(int N);
     void changeOutputFile(string output);
     char position(int i, int j);
-    vector<Cell> arround(int i, int j);
+    vector<Cell> around(int i, int j);
 
 };
 

@@ -48,10 +48,10 @@ void Dictionary::generateWords(int seed) {
     else srand(time(0));
 
     ofstream output;
-    output.open(file);
+    output.open(file.c_str());
 
     for(int i = 0; i < k; ++i) {
-        int x = rand() % r2 + r1;
+        int x = rand() % (r2 - r1) + r1;
         string y = to_string(x);
         dictionary[i] = y;
         output << y; output << "\n";
