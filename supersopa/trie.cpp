@@ -1,166 +1,119 @@
 #include "trie.h"
 
-Node::Node() {
-     mContent = ' '; mMarker = false;
-}
-
-Node::~Node() {
-  //free space
-}
-
-char Node::content() {
-   return mContent;
-}
-
-void Node::setContent(char c) {
-    mContent = c;
-}
-
-bool Node::wordMarker() {
-    return mMarker;
-}
-
-void Node::setWordMarker() {
-    mMarker = true;
-}
-
-void Node::unsetWordMarker() {
-    mMarker = false;
-}
-
-void Node::appendChild(Node *child) {
-    mChildren.push_back(child);
-}
-
-vector<Node*> Node::children() {
-    return mChildren;
-}
-
-Node* Node::findChild(char c)
-{
-    for ( int i = 0; i < mChildren.size(); i++ )
-    {
-        Node* tmp = mChildren.at(i);
-        if ( tmp->content() == c )
-        {
-            return tmp;
-        }
-    }
-
-    return NULL;
-}
-
-void Node::deleteChild(Node* child) {
-    int i = 0;
-    while(i<mChildren.size() and mChildren[i] != child) i++;
-    while(i<mChildren.size()-1) mChildren[i] = mChildren[i+1];
-    Node* tmp = mChildren.back();
-    delete tmp;
-    tmp = NULL;
-    mChildren.pop_back();
-}
-
 Trie::Trie()
 {
-    root = new Node();
+    root = createNode();
 }
 
 Trie::~Trie()
 {
-    // Free memory
+
 }
 
-void Trie::addWord(string s)
+Trie::Node * Trie::createNode()
 {
-    Node* current = root;
-
-    if ( s.length() == 0 )
+    Node *newNode=new Node;
+    if(newNode)
     {
-        current->setWordMarker(); // an empty word
-        return;
+        newNode->isLeaf=false;
+        for(int i=0;i<10;i++)
+            newNode->children[i]=NULL;
     }
+    return newNode;
 
-    for ( int i = 0; i < s.length(); i++ )
-    {
-        Node* child = current->findChild(s[i]);
-        if ( child != NULL )
-        {
-            current = child;
-        }
-        else
-        {
-            Node* tmp = new Node();
-            tmp->setContent(s[i]);
-            current->appendChild(tmp);
-            current = tmp;
-        }
-        if ( i == s.length() - 1 )
-            current->setWordMarker();
-    }
 }
 
-bool Trie::isPrefix(string s)
+bool Trie::searchPrefix(Node *root, string str)
 {
-    Node* current = root;
-
-    while ( current != NULL )
+    for(auto it=str.begin();it!=str.end();it++)
     {
-        for ( int i = 0; i < s.length(); i++ )
-        {
-            Node* tmp = current->findChild(s[i]);
-            if ( tmp == NULL )
-                return false;
-            current = tmp;
-        }
-        return true;
-    }
-}
-
-
-bool Trie::searchWord(string s)
-{
-    Node* current = root;
-
-    while ( current != NULL )
-    {
-        for ( int i = 0; i < s.length(); i++ )
-        {
-            Node* tmp = current->findChild(s[i]);
-            if ( tmp == NULL )
-                return false;
-            current = tmp;
-        }
-
-        if ( current->wordMarker() )
-            return true;
-        else
+        if(!root->children[*it-'0'])
             return false;
+        root=root->children[*it-'0'];
     }
+    return true;
+}
 
+bool Trie::isPrefix(string str)
+{
+    return searchPrefix(root,str);
+}
+
+void Trie::addWord(string str)
+{
+    insert(root,str);
+}
+
+bool Trie::searchWord(string str)
+{
+    return search(root,str);
+}
+
+bool Trie::deleteWord(string str)
+{
+    return deleteStr(root,str,0);
+}
+
+void Trie::insert(Node *root, string str)
+{
+    Node *ptr=root;
+    for(auto it=str.begin();it!=str.end();it++)
+    {
+        if(ptr->children[*it-'0'])
+            ptr=ptr->children[*it-'0'];
+        else
+        {
+            Node *newNode=createNode();
+            ptr->children[*it-'0']=newNode;
+            ptr=newNode;
+        }
+    }
+    ptr->isLeaf=true;
+}
+bool Trie::search(Node *root, string str)
+{
+    for(auto it=str.begin();it!=str.end();it++)
+    {
+        if(!root->children[*it-'0'])
+            return false;
+        root=root->children[*it-'0'];
+    }
+    return root && root->isLeaf;
+}
+bool Trie::isFree(Node *n)
+{
+    for(int i=0;i<10;i++)
+        if(n->children[i])
+            return false;
+    return true;
+}
+bool Trie::deleteStr(Node *root, string str,int level)
+{
+    if(root)
+    {
+        if(level==str.length())
+        {
+            root->isLeaf=false;
+            if(isFree(root))
+            {
+                delete root;
+                return true;
+            }
+            return false;
+        }
+
+        int key=str[level];
+        if(deleteStr(root->children[key-'0'],str,level+1))
+        {
+            if(!root->isLeaf)
+            {
+                delete root;
+                return true;
+            }
+            else
+                return false;
+        }
+
+    }
     return false;
-}
-
-bool deleteHelper(Node *current, string s, int level, int l)
-{
-    if (current != NULL) {
-        if (level == l) {
-            if (current->wordMarker()) {
-                current->unsetWordMarker();
-                if (current->children().size() == 0) return true;
-                else return false;
-            }
-        }
-        else {
-            Node *child = current->findChild(s[level]);
-            if(deleteHelper(child,s,level+1,l)) {
-                return (current->children().size() <= 0);
-            }
-        }
-    }
-}
-
-void Trie::deleteWord(string s)
-{
-    int l = s.size();
-    if(l > 0) deleteHelper(root,s,0,l);
 }

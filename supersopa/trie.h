@@ -6,39 +6,32 @@
 
 using namespace std;
 
-class Node {
-
-private:
-    char mContent;
-    bool mMarker;
-    vector<Node*> mChildren;
-
-public:
-    Node();
-    ~Node();
-    char content();
-    void setContent(char c);
-    bool wordMarker();
-    void setWordMarker();
-    void unsetWordMarker();
-    Node* findChild(char c);
-    void appendChild(Node* child);
-    vector<Node*> children();
-    void deleteChild(Node* child);
-};
 
 class Trie {
 
+    struct Node
+    {
+        Node *children[9];
+        bool isLeaf;
+    };
+
 private:
-    Node* root;
+    Node *root;
 
 public:
+
     Trie();
     ~Trie();
-    void addWord(string s);
-    bool searchWord(string s);
-    bool isPrefix(string s);
-    void deleteWord(string s);
+    Node *createNode();
+    bool searchPrefix(Node *root, string str);
+    bool isPrefix(string str);
+    void addWord(string str);
+    bool searchWord(string str);
+    bool deleteWord(string str);
+    void insert(Node *root, string str);
+    bool search(Node *root, string str);
+    bool isFree(Node *n);
+    bool deleteStr(Node *root, string str,int level);
 };
 
 #endif // TRIE_H

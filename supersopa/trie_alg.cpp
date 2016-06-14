@@ -1,6 +1,6 @@
 #include "trie_alg.h"
 
-bool check_for_word(Trie* trie, string word, Board &board, Dictionary &dict, vector<Board::Cell> adj, vector<vector<bool> > &used, const int &l) {
+bool check_for_word(Trie &trie, string word, Board &board, Dictionary &dict, vector<Board::Cell> &adj, vector<vector<bool> > &used, const int &l) {
   bool found = false;
   string s = "";
 
@@ -9,16 +9,17 @@ bool check_for_word(Trie* trie, string word, Board &board, Dictionary &dict, vec
       if(not used[adj[i].i][adj[i].j]) {
         used[adj[i].i][adj[i].j] = true;
         s = word + adj[i].val;
-        if(trie->isPrefix(s)) {
-            found = check_for_word(trie, s, board, dict, board.around(adj[i].i,adj[i].j), used, l);
+        if(trie.isPrefix(s)) {
+            vector<Board::Cell> aux = board.around(adj[i].i,adj[i].j);
+            found = check_for_word(trie, s, board, dict, aux, used, l);
             if(!found) used[adj[i].i][adj[i].j] = false;
             else return true;
         }
       }
     }
   }
-  if(trie->searchWord(s)) {
-      trie->deleteWord(s);
+  if(trie.searchWord(s)) {
+      trie.deleteWord(s);
       return true;
   }
   return false;
@@ -33,12 +34,12 @@ void trie_alg(Dictionary & dictionary, Board & board) {
     Dictionary dict = dictionary;
 
     //init trie
-    Trie* trie = new Trie();
+    Trie trie;
     int max_length = dictionary.getWord(0).size();
     for(int w = 0; w < dictionary.getK(); ++w) {
-        string aux = dictionary.nextWord();
-        trie->addWord(aux);
-        if(aux.size() > max_length) max_length = aux.size();
+        string s = dictionary.getWord(w); //MEJORAR ESTO
+        trie.addWord(s);
+        if(s.size() > max_length) max_length = s.size();
     }
     string word;
     bool found = false;
@@ -47,9 +48,10 @@ void trie_alg(Dictionary & dictionary, Board & board) {
     for(int i = 0; i < board.getN(); i++) {
       for(int j = 0; j < board.getN(); j++) {
         word = board.position(i,j);
-        if(!used[i][j] and trie->isPrefix(word)) {
+        if(!used[i][j] and trie.isPrefix(word)) {
           used[i][j] = true;
-          found = check_for_word(trie, word, board, dict, board.around(i,j), used, max_length);
+          vector<Board::Cell> aux = board.around(i,j);
+          found = check_for_word(trie, word, board, dict, aux, used, max_length);
           if(!found) used[i][j] = false;
           else {
             found = false;
