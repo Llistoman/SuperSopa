@@ -37,14 +37,25 @@ void naive(Dictionary & dictionary, Board & board, Board::Stats & stats) {
     }
 
     // SOLUTION:
-    /*for(int i=0; i<board.getN(); i++) {
+    ofstream output;
+    output.open("naive_sol.txt");
+    for(int i=0; i<board.getN(); i++) {
       for(int j=0; j<board.getN(); j++) {
         cout << " ";
-        if(visited[i][j]) cout << board.position(i,j);
-        else cout << "-";
+        output << " ";
+        if(visited[i][j]) {
+            cout << board.position(i,j);
+            output << board.position(i,j);
+        }
+        else {
+            cout << "-";
+            output << "-";
+        }
       }
+      output << "\n";
       cout << endl;
-    }*/
+    }
+    output.close();
 
     stats.clock_end = clock();
 }
