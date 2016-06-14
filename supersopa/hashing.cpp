@@ -27,9 +27,8 @@ int hash_basic_sum(string s, int n, int k) {
   for(int i = 0; i < s.size(); i++) {
     key += s[i] - '0';
   }
-  key = key*k;
-  int r = key % n;
-  return r;
+  key = key*k % n;
+  return key;
 }
 
 int hash_sum(string s, int n, int k) {
@@ -44,8 +43,8 @@ int hash_sum(string s, int n, int k) {
 
 int hash_read(string s, int n, int k) {
   long key = stoi(s,nullptr,10)*k;
-  int r = key % n;
-  return r;
+  key = key % n;
+  return key;
 }
 
 int custom_hash(string s, int n, int k, int m) {
@@ -81,8 +80,9 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
 
   cout << "Hashing method used: ";
   if((dictionary.getRange().second - dictionary.getRange().first) > dictionary.getK())
-    prime = (dictionary.getRange().second - dictionary.getRange().first)*30 % dictionary.getK();
-  else prime = dictionary.getK()*30 % (dictionary.getRange().second - dictionary.getRange().first);
+    prime = (dictionary.getRange().second - dictionary.getRange().first) % dictionary.getK();
+  else prime = dictionary.getK() % (dictionary.getRange().second - dictionary.getRange().first);
+  prime = prime*3;
   prime = next_prime(prime);
 
   switch(hash_method) {
@@ -93,19 +93,22 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     //es suficiente primalidad
     //SUM OF BASE 'PRIME' DIGITS
     case 1:
-      hashN = dictionary.getK();
+      hashN = (dictionary.getK()*dictionary.getK());
+      prime = prime % hashN;
       cout << "SUM OF BASE " << prime << " DIGITS" << endl;
       break;
 
     //caso 2 es usando el propio numero representado para el calc del modulo
     //NUM MOD NEXT PRIME
     case 2:
-      hashN = next_prime(dictionary.getK());
+      hashN = next_prime(dictionary.getK()*dictionary.getK());
+      prime = prime % hashN;
       cout << "NUM MOD " << prime << endl;
       break;
 
     default:
-      hashN = next_prime(dictionary.getK());
+      hashN = next_prime(dictionary.getK()*dictionary.getK());
+      prime = prime % hashN;
       cout << "SUM MOD " << prime << endl;
       break;
   }

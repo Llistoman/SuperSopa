@@ -18,7 +18,7 @@ void stats_reset(Board::Stats & stats) {
 
 void stats_print(Board::Stats & stats, int k) {
   int time = int(stats.clock_end - stats.clock_begin) / CLOCKS_PER_SEC;
-  int ntime = (stats.clock_end - stats.clock_begin) * 1000000000 / CLOCKS_PER_SEC;
+  int ntime = (stats.clock_end - stats.clock_begin - time * CLOCKS_PER_SEC) * 1000000000 / CLOCKS_PER_SEC;
   cout << "Tiempo transcurrido: " << time/60 << " minutos " << time%60 << " segundos " << ntime << " nanosegundos" << endl;
   cout << "Encontradas: " << stats.found << " de " << k << " palabras totales" << endl;
   cout << "Puntuacion: " << stats.score << endl;
@@ -107,6 +107,7 @@ int main()
             stats_reset(stats);
             cout << "Hash 1:" << endl;
             by_bloom(dictionary,board,1,stats,tiempo);
+            stats_print(stats, k);
         }
         else {
             stats_reset(stats);
