@@ -1,6 +1,6 @@
 #include "naive.h"
 
-void naive(Dictionary & dictionary, Board & board, Board::Stats & stats) {
+void naive(Dictionary & dictionary, Board & board, Board::Stats & stats, int tiempo) {
     vector<vector<bool> > visited(board.getN(), vector<bool>(board.getN(), false));
     vector<bool> check(dictionary.getK(),false);
 

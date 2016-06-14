@@ -1,7 +1,7 @@
 # include "trie_alg.h"
 
 
-void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats) {
+void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, int tiempo) {
   vector<vector<bool> > used(board.getN(), vector<bool>(board.getN(), false));
   Trie trie;
 

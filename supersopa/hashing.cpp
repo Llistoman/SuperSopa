@@ -69,7 +69,7 @@ int custom_hash(string s, int n, int k, int m) {
   }
 }
 
-void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats) {
+void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats, int tiempo) {
   int max_length = 0;
   int hashN = 0;
   int prime = 0;
