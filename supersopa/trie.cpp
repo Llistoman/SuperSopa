@@ -23,13 +23,13 @@ Trie::Node * Trie::createNode()
 
 }
 
-bool Trie::searchPrefix(Node *root, string str)
+bool Trie::searchPrefix(Node *n, string str)
 {
     for(auto it=str.begin();it!=str.end();it++)
     {
-        if(!root->children[*it-'0'])
+        if(!n->children[*it-'0'])
             return false;
-        root=root->children[*it-'0'];
+        n=n->children[*it-'0'];
     }
     return true;
 }
@@ -54,9 +54,9 @@ bool Trie::deleteWord(string str)
     return deleteStr(root,str,0);
 }
 
-void Trie::insert(Node *root, string str)
+void Trie::insert(Node *n, string str)
 {
-    Node *ptr=root;
+    Node *ptr=n;
     for(auto it=str.begin();it!=str.end();it++)
     {
         if(ptr->children[*it-'0'])
@@ -70,15 +70,15 @@ void Trie::insert(Node *root, string str)
     }
     ptr->isLeaf=true;
 }
-bool Trie::search(Node *root, string str)
+bool Trie::search(Node *n, string str)
 {
     for(auto it=str.begin();it!=str.end();it++)
     {
-        if(!root->children[*it-'0'])
+        if(!n->children[*it-'0'])
             return false;
-        root=root->children[*it-'0'];
+        n=n->children[*it-'0'];
     }
-    return root && root->isLeaf;
+    return n && n->isLeaf;
 }
 bool Trie::isFree(Node *n)
 {
@@ -87,27 +87,27 @@ bool Trie::isFree(Node *n)
             return false;
     return true;
 }
-bool Trie::deleteStr(Node *root, string str,int level)
+bool Trie::deleteStr(Node *n, string str,int level)
 {
-    if(root)
+    if(n)
     {
         if(level==str.length())
         {
-            root->isLeaf=false;
-            if(isFree(root))
+            n->isLeaf=false;
+            if(isFree(n))
             {
-                delete root;
+                delete n;
                 return true;
             }
             return false;
         }
 
         int key=str[level];
-        if(deleteStr(root->children[key-'0'],str,level+1))
+        if(deleteStr(n->children[key-'0'],str,level+1))
         {
-            if(!root->isLeaf)
+            if(!n->isLeaf)
             {
-                delete root;
+                delete n;
                 return true;
             }
             else

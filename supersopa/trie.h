@@ -23,15 +23,15 @@ public:
     Trie();
     ~Trie();
     Node *createNode();
-    bool searchPrefix(Node *root, string str);
+    bool searchPrefix(Node *n, string str);
     bool isPrefix(string str);
     void addWord(string str);
     bool searchWord(string str);
     bool deleteWord(string str);
-    void insert(Node *root, string str);
-    bool search(Node *root, string str);
+    void insert(Node *n, string str);
+    bool search(Node *n, string str);
     bool isFree(Node *n);
-    bool deleteStr(Node *root, string str,int level);
+    bool deleteStr(Node *n, string str,int level);
 };
 
 #endif // TRIE_H
