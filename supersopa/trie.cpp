@@ -27,10 +27,12 @@ bool Trie::isPrefix(string str)
     Node* n = root;
     for(int i=0; i<str.size();i++)
     {
-        if(n->children[str[i]-'0'] == NULL)
+        if(n->children[str[i]-'0'] == NULL) {
             return false;
+          }
         n=n->children[str[i]-'0'];
     }
+
     return (n != NULL);
 }
 
@@ -92,8 +94,6 @@ bool Trie::deleteStr(Node *n, string str, int level)
             if(n->isLeaf and isFree(n))
             {
                 n->isLeaf=false;
-                delete n;
-                n = NULL;
                 return true;
             }
             return false;
@@ -102,16 +102,14 @@ bool Trie::deleteStr(Node *n, string str, int level)
         int key=str[level];
         if(deleteStr(n->children[key-'0'],str,level+1))
         {
+            delete n->children[key-'0'];
             n->children[key-'0'] = NULL;
             if(isFree(n))
             {
-                delete n;
-                n = NULL;
                 return true;
             }
-            return false;
         }
-
+        return false;
     }
-    return false;
+    return true;
 }

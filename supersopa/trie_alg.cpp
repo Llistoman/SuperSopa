@@ -31,14 +31,15 @@ void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats) {
     }
   }
 
-  for(int i=0; i<board.getN(); i++) {
+  // SOLUTION:
+  /*for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
       cout << " ";
       if(used[i][j]) cout << board.position(i,j);
       else cout << "-";
     }
     cout << endl;
-  }
+  }*/
 
   stats.clock_end = clock();
 }

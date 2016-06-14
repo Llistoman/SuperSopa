@@ -73,6 +73,7 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
   vector<int> hdict;
 
   stats.clock_begin = clock();
+  
   cout << "Hashing method used: ";
 
   switch(hash_method) {
@@ -136,14 +137,14 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
   }
 
   // SOLUTION:
-  for(int i=0; i<board.getN(); i++) {
+  /*for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
       cout << " ";
       if(used[i][j]) cout << board.position(i,j);
       else cout << "-";
     }
     cout << endl;
-  }
+  }*/
 
   stats.clock_end = clock();
 }

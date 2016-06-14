@@ -16,14 +16,12 @@ void stats_reset(Board::Stats & stats) {
 }
 
 void stats_print(Board::Stats & stats, int k) {
-  int time = int(stats.clock_begin - stats.clock_end) / CLOCKS_PER_SEC;
+  int time = int(stats.clock_end - stats.clock_begin) / CLOCKS_PER_SEC;
   cout << "Time spent: " << time/60 << " minutes " << time%60 << " seconds" << endl;
   cout << "Found: " << stats.found << " out of " << k << " total words" << endl;
   cout << "Score: " << stats.score << endl;
   cout << "Comparisons: " << stats.comparisons << endl;
   cout << "---------------" << endl;
-
-  stats_reset(stats);
 }
 
 int main()
@@ -53,20 +51,22 @@ int main()
     dictionary.generateWords(seed);
 
     stats_reset(stats);
-
-    naive(dictionary,board,stats);
-
     cout << endl << "Naive/greedy:" << endl;
+    naive(dictionary,board,stats);
     stats_print(stats, k);
     cout << endl;
 
-    for(int i = 0; i < 3; i++) {
+    stats_reset(stats);
+    cout << "Trie implementation:" << endl;
+    trie_alg(dictionary,board,stats);
+    stats_print(stats, k);
+    cout << endl;
+
+    cout << "Hashes:" << endl;
+    for(int i = 1; i < 3; i++) {
+      stats_reset(stats);
       by_bloom(dictionary, board, i, stats);
       stats_print(stats, k);
     }
     cout << endl;
-
-    trie_alg(dictionary,board,stats);
-
-    stats_print(stats, k);
 }
