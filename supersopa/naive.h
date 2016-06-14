@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void naive(Dictionary & dictionary, Board & board, Board::Stats & stats);
+void naive(Dictionary & dictionary, Board & board, Board::Stats & stats, string file);
 bool check_for_word(string &word, int index, Board &board, vector<Board::Cell> adj, vector<vector<bool> > &visited, stack<pair<int,int> > &pos, Board::Stats &stats);
 
 #endif // NAIVE_H

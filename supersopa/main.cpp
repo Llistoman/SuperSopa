@@ -17,10 +17,10 @@ void stats_reset(Board::Stats & stats) {
 
 void stats_print(Board::Stats & stats, int k) {
   int time = int(stats.clock_end - stats.clock_begin) / CLOCKS_PER_SEC;
-  cout << "Time spent: " << time/60 << " minutes " << time%60 << " seconds" << endl;
-  cout << "Found: " << stats.found << " out of " << k << " total words" << endl;
-  cout << "Score: " << stats.score << endl;
-  cout << "Comparisons: " << stats.comparisons << endl;
+  cout << "Tiempo transcurrido: " << time/60 << " minutes " << time%60 << " seconds" << endl;
+  cout << "Encontradas: " << stats.found << " de " << k << " palabras totales" << endl;
+  cout << "Puntuacion: " << stats.score << endl;
+  cout << "Comparaciones: " << stats.comparisons << endl;
   cout << "---------------" << endl;
 }
 
@@ -30,19 +30,23 @@ int main()
     string file1, file2;
     Board::Stats stats;
 
-    cout << "N?" << endl;
+    cout << "--------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------SUPERSOPA---------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------" << endl;
+    cout << "Bienvenido a nuestra practica de Algorítmia." << endl;
+    cout << "Selecciona un tamaño para el tablero (N)" << endl;
     cin >> n;
-    cout << "What output file (board)?" << endl;
-    cin >> file1;
-
-    cout << "K?" << endl;
+    cout << "Selecciona un numero de palabras para el diccionario (K)" << endl;
     cin >> k;
-    cout << "What output file (words)?" << endl;
-    cin >> file2;
-    cout << "Range?" << endl;
+    cout << "Rango de numeros para formar palabras (primero minimo, despues maximo)" << endl;
     cin >> r1 >> r2;
-    cout << "What seed?" << endl;
+    cout << "Introduce una semilla (si es negativa se usara el tiempo local)" << endl;
     cin >> seed;
+    cout << "Escrbe el nombre del archivo donde se guardara el tablero (las soluciones" << endl;
+    cout << "de los algoritmos también utilizaran archivos con ese nombre añadiendo '_sol'" << endl;
+    cin >> file1;
+    cout << "Escrbe el nombre del archivo donde se guardaran las palabras del diccionario" << endl;
+    cin >> file2;
 
     Board board(n,file1);
     Dictionary dictionary(k,r1,r2,file2);
@@ -50,23 +54,65 @@ int main()
     board.generateBoard(seed);
     dictionary.generateWords(seed);
 
-    stats_reset(stats);
-    cout << endl << "Naive/greedy:" << endl;
-    naive(dictionary,board,stats);
-    stats_print(stats, k);
-    cout << endl;
+    cout << "Que algoritmo deseas probar?" << endl;
+    cout << "0 - Naive (voraz que mira palabras iterativamente)" << endl;
+    cout << "1 - Naive2 (voraz que mira palabras iterativamente, todas a la vez)" << endl;
+    cout << "2 - Trie (busca palabras en DFS, usa un Trie para consultar en el diccionario)" << endl;
+    cout << "3 - Hash (busca palabras en DFS, hay varios Hashes para consultar )" << endl;
+    cout << "4 - Terminar ejecucion" << endl;
 
-    stats_reset(stats);
-    cout << "Trie implementation:" << endl;
-    trie_alg(dictionary,board,stats);
-    stats_print(stats, k);
-    cout << endl;
+    int option;
+    while (cin >> option) {
+        if (option == 0) {
+            stats_reset(stats);
+            cout << endl << "Naive/greedy:" << endl;
+            naive(dictionary,board,stats,file1);
+            stats_print(stats, k);
+            cout << endl;
+        }
+        //else if (option == 1) {}
+        else if (option == 2) {
+            stats_reset(stats);
+            cout << "Trie implementation:" << endl;
+            trie_alg(dictionary,board,stats,file1);
+            stats_print(stats, k);
+            cout << endl;
+        }
+        else if (option == 3) {
+            int order2;
+            cout << "Selecciona tipo de Hash:" << endl;
+            cout << "0 - Suma de digitos modulo primo" << endl;
+            cout << "1 - Suma de digitos por primo elevado a N" << endl;
+            cout << "2 - Numero modulo primo" << endl;
 
-    cout << "Hashes:" << endl;
-    for(int i = 1; i < 3; i++) {
-      stats_reset(stats);
-      by_bloom(dictionary, board, i, stats);
-      stats_print(stats, k);
+            cin >> order2;
+            if (order2 == 0) {
+                stats_reset(stats);
+                cout << "Hash 0:" << endl;
+                by_bloom(dictionary, board, 0, stats, file1);
+                stats_print(stats, k);
+            }
+            else if (order2 == 1) {
+                stats_reset(stats);
+                cout << "Hash 1:" << endl;
+                by_bloom(dictionary, board, 1, stats, file1);
+                stats_print(stats, k);
+            }
+            else if (order2 == 2) {
+                stats_reset(stats);
+                cout << "Hash 2:" << endl;
+                by_bloom(dictionary, board, 2, stats, file1);
+                stats_print(stats, k);
+            }
+            else cout << "No existe esa opcion" << endl;
+        }
+        else cout << "No existe esa opcion" << endl;
+        cout << endl;
+        cout << "Que algoritmo deseas probar?" << endl;
+        cout << "0 - Naive (voraz que mira palabras iterativamente)" << endl;
+        cout << "1 - Naive2 (voraz que mira palabras iterativamente, todas a la vez)" << endl;
+        cout << "2 - Trie (busca palabras en DFS, usa un Trie para consultar en el diccionario)" << endl;
+        cout << "3 - Hash (busca palabras en DFS, hay varios Hashes para consultar )" << endl;
+        cout << "4 - Terminar ejecucion" << endl;
     }
-    cout << endl;
 }

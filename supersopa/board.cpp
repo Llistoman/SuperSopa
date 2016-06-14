@@ -34,7 +34,8 @@ void Board::generateBoard(int seed) {
     else srand(time(0));
 
     ofstream output;
-    output.open(file.c_str());
+    string f = file + ".txt";
+    output.open(f);
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {

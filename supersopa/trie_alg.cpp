@@ -1,7 +1,7 @@
 # include "trie_alg.h"
 
 
-void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats) {
+void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, string file) {
   vector<vector<bool> > used(board.getN(), vector<bool>(board.getN(), false));
   Trie trie;
 
@@ -33,22 +33,19 @@ void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats) {
 
   // SOLUTION:
   ofstream output;
-  output.open("trie_sol.txt");
+  string f = file + "_trie_sol.txt";
+  output.open(f);
   for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
-      cout << " ";
       output << " ";
       if(used[i][j]) {
-          cout << board.position(i,j);
           output << board.position(i,j);
       }
       else {
-          cout << "-";
           output << "-";
       }
     }
     output << "\n";
-    cout << endl;
   }
   output.close();
 

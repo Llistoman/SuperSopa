@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats);
+void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, string file);
 bool check_for_word(Trie &trie, string word, Board &board, vector<Board::Cell> adj, vector<vector<bool> > &used, const int &l, Board::Stats &stats);
 
 #endif // TRIE_ALG_H

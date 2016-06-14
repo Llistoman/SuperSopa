@@ -60,7 +60,8 @@ void Dictionary::generateWords(int seed) {
     else srand(time(0));
 
     ofstream output;
-    output.open(file.c_str());
+    string f = file + ".txt";
+    output.open(f);
 
     for(int i = 0; i < k; ++i) {
         int x = (rand() % (r2 - r1)) + r1;

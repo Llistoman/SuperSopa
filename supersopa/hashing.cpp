@@ -65,7 +65,7 @@ int custom_hash(string s, int n, int m) {
   }
 }
 
-void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats) {
+void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats, string file) {
   int max_length = 0;
   int hashN = 0;
   int repetitions = 0;
@@ -138,23 +138,19 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
 
   // SOLUTION:
   ofstream output;
-  string file = "hash_" + to_string(hash_method) + "_sol.txt";
-  output.open(file);
+  string f = file + "_hash_" + to_string(hash_method) + "_sol.txt";
+  output.open(f);
   for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
-      cout << " ";
       output << " ";
       if(used[i][j]) {
-          cout << board.position(i,j);
           output << board.position(i,j);
       }
       else {
-          cout << "-";
           output << "-";
       }
     }
     output << "\n";
-    cout << endl;
   }
   output.close();
 
