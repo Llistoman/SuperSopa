@@ -1,6 +1,6 @@
 #include "naive.h"
 
-void naive(Dictionary & dictionary, Board & board, Board::Stats & stats, string file) {
+void naive(Dictionary & dictionary, Board & board, Board::Stats & stats) {
     vector<vector<bool> > visited(board.getN(), vector<bool>(board.getN(), false));
     vector<bool> check(dictionary.getK(),false);
 
@@ -38,7 +38,7 @@ void naive(Dictionary & dictionary, Board & board, Board::Stats & stats, string 
 
     // SOLUTION:
     ofstream output;
-    string f = file + "_naive_sol.txt";
+    string f = board.getOutputFile() + "_naive_sol.txt";
     output.open(f);
     for(int i=0; i<board.getN(); i++) {
       for(int j=0; j<board.getN(); j++) {

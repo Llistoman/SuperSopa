@@ -4,7 +4,8 @@
 #include "trie.h"
 #include "hashing.h"
 #include "trie_alg.h"
-#include "naive.h"
+#include "naive.h"  //Naive
+#include "greedy.h" //Naive2
 
 using namespace std;
 
@@ -56,25 +57,31 @@ int main()
 
     cout << "Que algoritmo deseas probar?" << endl;
     cout << "0 - Naive (voraz que mira palabras iterativamente)" << endl;
-    cout << "1 - Naive2 (voraz que mira palabras iterativamente, todas a la vez)" << endl;
+    cout << "1 - Naive2 (voraz que recorre el tablero iterativamente buscando palabras en DFS)" << endl;
     cout << "2 - Trie (busca palabras en DFS, usa un Trie para consultar en el diccionario)" << endl;
-    cout << "3 - Hash (busca palabras en DFS, hay varios Hashes para consultar )" << endl;
+    cout << "3 - Hash (busca palabras en DFS, hay varios Hashes para consultar)" << endl;
     cout << "4 - Terminar ejecucion" << endl;
 
     int option;
     while (cin >> option) {
         if (option == 0) {
             stats_reset(stats);
-            cout << endl << "Naive/greedy:" << endl;
-            naive(dictionary,board,stats,file1);
+            cout << endl << "Naive:" << endl;
+            naive(dictionary,board,stats);
             stats_print(stats, k);
             cout << endl;
         }
-        //else if (option == 1) {}
+        else if (option == 1) {
+          stats_reset(stats);
+          cout << endl << "Naive2:" << endl;
+          naive(dictionary,board,stats);
+          stats_print(stats, k);
+          cout << endl;
+        }
         else if (option == 2) {
             stats_reset(stats);
             cout << "Trie implementation:" << endl;
-            trie_alg(dictionary,board,stats,file1);
+            trie_alg(dictionary,board,stats);
             stats_print(stats, k);
             cout << endl;
         }
@@ -89,19 +96,19 @@ int main()
             if (order2 == 0) {
                 stats_reset(stats);
                 cout << "Hash 0:" << endl;
-                by_bloom(dictionary, board, 0, stats, file1);
+                by_bloom(dictionary, board, 0, stats);
                 stats_print(stats, k);
             }
             else if (order2 == 1) {
                 stats_reset(stats);
                 cout << "Hash 1:" << endl;
-                by_bloom(dictionary, board, 1, stats, file1);
+                by_bloom(dictionary, board, 1, stats);
                 stats_print(stats, k);
             }
             else if (order2 == 2) {
                 stats_reset(stats);
                 cout << "Hash 2:" << endl;
-                by_bloom(dictionary, board, 2, stats, file1);
+                by_bloom(dictionary, board, 2, stats);
                 stats_print(stats, k);
             }
             else cout << "No existe esa opcion" << endl;
@@ -110,7 +117,7 @@ int main()
         cout << endl;
         cout << "Que algoritmo deseas probar?" << endl;
         cout << "0 - Naive (voraz que mira palabras iterativamente)" << endl;
-        cout << "1 - Naive2 (voraz que mira palabras iterativamente, todas a la vez)" << endl;
+        cout << "1 - Naive2 (voraz que recorre el tablero iterativamente buscando palabras en DFS)" << endl;
         cout << "2 - Trie (busca palabras en DFS, usa un Trie para consultar en el diccionario)" << endl;
         cout << "3 - Hash (busca palabras en DFS, hay varios Hashes para consultar )" << endl;
         cout << "4 - Terminar ejecucion" << endl;

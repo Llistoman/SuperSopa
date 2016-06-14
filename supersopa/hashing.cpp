@@ -22,29 +22,33 @@ int next_prime(int n) {
   return n;
 }
 
-int hash_basic_sum(string s, int n) {
-  int key = 0;
+int hash_basic_sum(string s, int n, int k) {
+  long key = 0;
   for(int i = 0; i < s.size(); i++) {
     key += s[i] - '0';
   }
-  return key % n;
+  key = key*k;
+  int r = key % n;
+  return r;
 }
 
-int hash_sum(string s, int n) {
-  int key = 0;
+int hash_sum(string s, int n, int k) {
+  long key = 0;
   for(int i = 0; i < s.size(); i++) {
-    key *= 31;
+    key *= k;
     key += s[i] - '0';
+    key = key % n;
   }
-  return key % n;
+  return key;
 }
 
-int hash_read(string s, int n) {
-  int key = stoi(s,nullptr,10);
-  return key % n;
+int hash_read(string s, int n, int k) {
+  long key = stoi(s,nullptr,10)*k;
+  int r = key % n;
+  return r;
 }
 
-int custom_hash(string s, int n, int m) {
+int custom_hash(string s, int n, int k, int m) {
   switch(m) {
     //caso base es busqueda naive del siguiente primo (ver default)
     //SUM MOD NAIVE NEXT PRIME
@@ -53,67 +57,70 @@ int custom_hash(string s, int n, int m) {
     //es suficiente primalidad
     //SUM OF BASE 31 DIGITS
     case 1:
-      return hash_sum(s, n);
+      return hash_sum(s, n, k);
 
     //caso 2 es usando el propio numero representado para el calc del modulo
     //NUM MOD NEXT PRIME
     case 2:
-      return hash_read(s, n);
+      return hash_read(s, n, k);
 
     default:
-      return hash_basic_sum(s, n);
+      return hash_basic_sum(s, n, k);
   }
 }
 
-void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats, string file) {
+void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::Stats & stats) {
   int max_length = 0;
   int hashN = 0;
+  int prime = 0;
   int repetitions = 0;
   Dictionary dict = dictionary;
   vector<int> hdict;
 
   stats.clock_begin = clock();
-  
+
   cout << "Hashing method used: ";
+  if((dictionary.getRange().second - dictionary.getRange().first) > dictionary.getK())
+    prime = (dictionary.getRange().second - dictionary.getRange().first)*30 % dictionary.getK();
+  else prime = dictionary.getK()*30 % (dictionary.getRange().second - dictionary.getRange().first);
+  prime = next_prime(prime);
 
   switch(hash_method) {
     //caso base es busqueda naive del siguiente primo (ver default)
-    //SUM MOD NAIVE NEXT PRIME
+    //SUM MOD PRIME
 
     //caso 1 es suponiendo que haciendo de s un num en base [primo]
     //es suficiente primalidad
-    //SUM OF BASE 31 DIGITS
+    //SUM OF BASE 'PRIME' DIGITS
     case 1:
-      hdict = vector<int>(dictionary.getRange().second - dictionary.getRange().first, 0);
-      cout << "SUM OF BASE 31 DIGITS" << endl;
+      hashN = dictionary.getK();
+      cout << "SUM OF BASE " << prime << " DIGITS" << endl;
       break;
 
     //caso 2 es usando el propio numero representado para el calc del modulo
     //NUM MOD NEXT PRIME
     case 2:
-      hashN = next_prime(dictionary.getRange().second - dictionary.getRange().first);
-      hdict = vector<int>(hashN, 0);
-      cout << "NUM MOD [NAIVE NEXT PRIME]" << endl;
-      cout << "Chosen prime: " << hashN << endl;
+      hashN = next_prime(dictionary.getK());
+      cout << "NUM MOD " << prime << endl;
       break;
 
     default:
-      hashN = next_prime(dictionary.getRange().second - dictionary.getRange().first);
-      hdict = vector<int>(hashN, 0);
-      cout << "SUM MOD [NAIVE NEXT PRIME]" << endl;
-      cout << "Chosen prime: " << hashN << endl;
+      hashN = next_prime(dictionary.getK());
+      cout << "SUM MOD " << prime << endl;
       break;
   }
 
+  hdict = vector<int>(hashN, 0);
+  cout << "Hash dict. size: " << hashN << endl;
   for(int i=0; i<dict.getK(); i++) {
-    hdict[custom_hash(dict.getWord(i), hdict.size(), hash_method)]++;
+    hdict[custom_hash(dict.getWord(i), hdict.size(), prime, hash_method)]++;
     if(dict.getWord(i).size() > max_length) max_length = dict.getWord(i).size();
   }
 
   for(int i=0; i<hdict.size(); i++) {
     if(hdict[i] > repetitions) repetitions = hdict[i];
   }
-  cout << "Bloom repetitions: " << repetitions << endl;
+  cout << "Max. hash repetitions: " << repetitions << endl;
 
   vector<vector<bool> > used = vector<vector<bool> >(board.getN(), vector<bool>(board.getN(), false));
 
@@ -126,7 +133,7 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
         stats.comparisons++;
         used[i][j] = true;
         word = board.position(i,j);
-        found = check_for_word(word, board, dict, hdict, board.around(i,j), used, hash_method, max_length, stats);
+        found = check_for_word(word, board, dict, hdict, board.around(i,j), used, prime, hash_method, max_length, stats);
         if(!found) used[i][j] = false;
         else {
           found = false;
@@ -138,7 +145,7 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
 
   // SOLUTION:
   ofstream output;
-  string f = file + "_hash_" + to_string(hash_method) + "_sol.txt";
+  string f = board.getOutputFile() + "_hash_" + to_string(hash_method) + "_sol.txt";
   output.open(f);
   for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
@@ -157,7 +164,7 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
   stats.clock_end = clock();
 }
 
-bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &hash_method, const int &l, Board::Stats & stats) {
+bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &prime, const int &hash_method, const int &l, Board::Stats & stats) {
   bool found = false;
   string s = "";
 
@@ -168,18 +175,17 @@ bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hd
 
         used[v[i].i][v[i].j] = true;
         s = word + v[i].val;
-        found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, hash_method, l, stats);
-        if(!found) used[v[i].i][v[i].j] = false;
+        found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, prime, hash_method, l, stats);
+        if(not found) used[v[i].i][v[i].j] = false;
         else return true;
       }
     }
   }
 
-  if(hdict[custom_hash(word, hdict.size(), hash_method)] > 0) {
-    found = search_word(word, dict);
+  if(hdict[custom_hash(word, hdict.size(), prime, hash_method)] > 0) {
+    found = search_word_h(word, dict);
     if(found) {
-      hdict[custom_hash(word, hdict.size(), hash_method)]--;
-
+      hdict[custom_hash(word, hdict.size(), prime, hash_method)]--;
       stats.score += word.size();
     }
     return found;
@@ -188,13 +194,14 @@ bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hd
   return found;
 }
 
-bool search_word(string s, Dictionary &dict) {
-  list<string> words = dict.getWords();
-  for(int i=0; i<words.size(); i++) {
-    if(s == dict.getWord(i)) {
+bool search_word_h(string s, Dictionary &dict) {
+  list<string>::iterator it = dict.begin();
+  while(it != dict.end()) {
+    if(s == *it) {
       dict.eraseWord(s);
       return true;
     }
+    it++;
   }
 
   return false;

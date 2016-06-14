@@ -1,7 +1,7 @@
 # include "trie_alg.h"
 
 
-void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, string file) {
+void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats) {
   vector<vector<bool> > used(board.getN(), vector<bool>(board.getN(), false));
   Trie trie;
 
@@ -33,7 +33,7 @@ void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, stri
 
   // SOLUTION:
   ofstream output;
-  string f = file + "_trie_sol.txt";
+  string f = board.getOutputFile() + "_trie_sol.txt";
   output.open(f);
   for(int i=0; i<board.getN(); i++) {
     for(int j=0; j<board.getN(); j++) {
