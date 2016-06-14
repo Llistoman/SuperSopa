@@ -36,7 +36,8 @@ public:
     void changeOutputFile(string output);
     void generateWords(int seed);
     void eraseWord(string w);
-
+    list<string>::iterator begin();
+    list<string>::iterator end();
 };
 
 #endif // DICTIONARY_H

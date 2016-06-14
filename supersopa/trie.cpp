@@ -15,28 +15,23 @@ Trie::Node * Trie::createNode()
     Node *newNode=new Node;
     if(newNode)
     {
-        newNode->isLeaf=false;
-        for(int i=0;i<10;i++)
-            newNode->children[i]=NULL;
+        newNode->isLeaf = false;
+        newNode->children = vector<Node*>(10, NULL);
     }
     return newNode;
 
 }
 
-bool Trie::searchPrefix(Node *n, string str)
-{
-    for(auto it=str.begin();it!=str.end();it++)
-    {
-        if(!n->children[*it-'0'])
-            return false;
-        n=n->children[*it-'0'];
-    }
-    return true;
-}
-
 bool Trie::isPrefix(string str)
 {
-    return searchPrefix(root,str);
+    Node* n = root;
+    for(int i=0; i<str.size();i++)
+    {
+        if(n->children[str[i]-'0'] == NULL)
+            return false;
+        n=n->children[str[i]-'0'];
+    }
+    return (n != NULL);
 }
 
 void Trie::addWord(string str)
@@ -57,14 +52,15 @@ bool Trie::deleteWord(string str)
 void Trie::insert(Node *n, string str)
 {
     Node *ptr=n;
-    for(auto it=str.begin();it!=str.end();it++)
+    for(int i=0; i<str.size(); i++)
     {
-        if(ptr->children[*it-'0'])
-            ptr=ptr->children[*it-'0'];
+        if(ptr->children[str[i]-'0'] != NULL) {
+            ptr=ptr->children[str[i]-'0'];
+          }
         else
         {
             Node *newNode=createNode();
-            ptr->children[*it-'0']=newNode;
+            ptr->children[str[i]-'0']=newNode;
             ptr=newNode;
         }
     }
@@ -72,31 +68,32 @@ void Trie::insert(Node *n, string str)
 }
 bool Trie::search(Node *n, string str)
 {
-    for(auto it=str.begin();it!=str.end();it++)
+    for(int i=0; i<str.size(); i++)
     {
-        if(!n->children[*it-'0'])
+        if(n->children[str[i]-'0'] == NULL)
             return false;
-        n=n->children[*it-'0'];
+        n=n->children[str[i]-'0'];
     }
-    return n && n->isLeaf;
+    return (n!=NULL) && n->isLeaf;
 }
 bool Trie::isFree(Node *n)
 {
     for(int i=0;i<10;i++)
-        if(n->children[i])
+        if(n->children[i] != NULL)
             return false;
     return true;
 }
-bool Trie::deleteStr(Node *n, string str,int level)
+bool Trie::deleteStr(Node *n, string str, int level)
 {
-    if(n)
+    if(n != NULL)
     {
-        if(level==str.length())
+        if(level==str.size())
         {
-            n->isLeaf=false;
-            if(isFree(n))
+            if(n->isLeaf and isFree(n))
             {
+                n->isLeaf=false;
                 delete n;
+                n = NULL;
                 return true;
             }
             return false;
@@ -105,13 +102,14 @@ bool Trie::deleteStr(Node *n, string str,int level)
         int key=str[level];
         if(deleteStr(n->children[key-'0'],str,level+1))
         {
-            if(!n->isLeaf)
+            n->children[key-'0'] = NULL;
+            if(isFree(n))
             {
                 delete n;
+                n = NULL;
                 return true;
             }
-            else
-                return false;
+            return false;
         }
 
     }

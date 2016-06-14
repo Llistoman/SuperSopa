@@ -66,5 +66,7 @@ int main()
     }
     cout << endl;
 
-    trie_alg(dictionary,board);
+    trie_alg(dictionary,board,stats);
+
+    stats_print(stats, k);
 }

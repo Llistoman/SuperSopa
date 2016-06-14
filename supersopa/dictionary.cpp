@@ -79,3 +79,13 @@ void Dictionary::eraseWord(string w) {
     }
     if(j != dictionary.end()) dictionary.erase(j);
 }
+
+list<string>::iterator Dictionary::begin() {
+  list<string>::iterator it = dictionary.begin();
+  return it;
+}
+
+list<string>::iterator Dictionary::end() {
+  list<string>::iterator it = dictionary.end();
+  return it;
+}

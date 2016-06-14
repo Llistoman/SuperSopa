@@ -11,7 +11,7 @@ class Trie {
 
     struct Node
     {
-        Node *children[9];
+        vector<Node*> children;
         bool isLeaf;
     };
 
@@ -23,7 +23,6 @@ public:
     Trie();
     ~Trie();
     Node *createNode();
-    bool searchPrefix(Node *n, string str);
     bool isPrefix(string str);
     void addWord(string str);
     bool searchWord(string str);
