@@ -8,6 +8,25 @@ Dictionary::Dictionary(int K, int range1, int range2, string output) {
     dictionary = list<string>();
 }
 
+Dictionary::Dictionary(string f) {
+    ifstream input;
+    string s = f + ".txt";
+    input.open(s);
+    if (input.is_open()) {
+        input >> k;
+        dictionary = list<string>();
+        string aux;
+        for (int j = 0; j < k; ++j) {
+            input >> aux;
+            dictionary.push_back(aux);
+        }
+        input.close();
+        file = f;
+        it = dictionary.begin();
+    }
+    else cout << "No se ha podido abrir el archivo del tablero" << endl;
+}
+
 int Dictionary::getK() {
     return k;
 }
@@ -62,7 +81,7 @@ void Dictionary::generateWords(int seed) {
     ofstream output;
     string f = file + ".txt";
     output.open(f);
-
+    output << k; output << "\n";
     for(int i = 0; i < k; ++i) {
         int x = (rand() % (r2 - r1)) + r1;
         string y = to_string(x);
@@ -82,11 +101,11 @@ void Dictionary::eraseWord(string w) {
 }
 
 list<string>::iterator Dictionary::begin() {
-  list<string>::iterator it = dictionary.begin();
-  return it;
+    list<string>::iterator it = dictionary.begin();
+    return it;
 }
 
 list<string>::iterator Dictionary::end() {
-  list<string>::iterator it = dictionary.end();
-  return it;
+    list<string>::iterator it = dictionary.end();
+    return it;
 }

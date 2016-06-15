@@ -4,7 +4,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
-#include <time.h>
 #include <vector>
 #include "dictionary.h"
 #include "board.h"

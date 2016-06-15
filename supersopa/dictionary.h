@@ -25,6 +25,7 @@ private:
 
 public:
     Dictionary(int K, int range1, int range2, string output);
+    Dictionary(string f);
     int getK();
     pair<int,int> getRange();
     list<string> getWords();

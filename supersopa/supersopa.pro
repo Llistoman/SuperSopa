@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     naive.cpp \
     trie.cpp \
     hashing.cpp \
-    trie_alg.cpp
+    trie_alg.cpp \
+    greedy.cpp
 
 HEADERS += \
     board.h \
@@ -18,5 +19,6 @@ HEADERS += \
     trie.h \
     hashing.h \
     naive.h \
-    trie_alg.h
+    trie_alg.h \
+    greedy.h
 

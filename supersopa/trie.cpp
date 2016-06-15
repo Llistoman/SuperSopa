@@ -29,7 +29,7 @@ bool Trie::isPrefix(string str)
     {
         if(n->children[str[i]-'0'] == NULL) {
             return false;
-          }
+        }
         n=n->children[str[i]-'0'];
     }
 
@@ -58,7 +58,7 @@ void Trie::insert(Node *n, string str)
     {
         if(ptr->children[str[i]-'0'] != NULL) {
             ptr=ptr->children[str[i]-'0'];
-          }
+        }
         else
         {
             Node *newNode=createNode();

@@ -25,14 +25,15 @@ public:
     };
 
     struct Stats {
-      int found;
-      int comparisons;
-      int score;
-      clock_t clock_begin;
-      clock_t clock_end;
+        int found;
+        int comparisons;
+        int score;
+        clock_t clock_begin;
+        clock_t clock_end;
     };
 
     Board(int N, string output);
+    Board(string file);
     int getN();
     string getOutputFile();
     void generateBoard(int seed);

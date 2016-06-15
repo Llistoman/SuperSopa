@@ -6,6 +6,24 @@ Board::Board(int N, string output) {
     board = vector<vector<char> > (n, vector<char>(n));
 }
 
+Board::Board(string f) {
+    ifstream input;
+    string s = f + ".txt";
+    input.open(s);
+    if (input.is_open()) {
+        input >> n;
+        board = vector<vector<char> > (n, vector<char>(n));
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                input >> board[i][j];
+            }
+        }
+        input.close();
+        file = f;
+    }
+    else cout << "No se ha podido abrir el archivo del tablero" << endl;
+}
+
 int Board::getN() {
     return n;
 }
@@ -36,7 +54,7 @@ void Board::generateBoard(int seed) {
     ofstream output;
     string f = file + ".txt";
     output.open(f);
-
+    output << n; output << "\n";
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             int x = rand() % 10;
