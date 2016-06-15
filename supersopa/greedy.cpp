@@ -15,29 +15,21 @@ void greedy(Dictionary & dictionary, Board & board, Board::Stats & stats, int ti
     string word = "";
 
     stats.clock_begin = clock();
-    bool timeup = false;
+    clock_t aux = clock();
+    bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
+
     for(int i=0; i<board.getN() and not timeup; i++) {
-
-        clock_t aux = clock();
-        if (tiempo == 0 or tiempo > (int(aux - stats.clock_begin) / CLOCKS_PER_SEC)) {
-
-            for(int j=0; j<board.getN() and not timeup; j++) {
-
-                clock_t aux2 = clock();
-                if (tiempo == 0 or tiempo > (int(aux2 - stats.clock_begin) / CLOCKS_PER_SEC)) {
-
-                    ++stats.comparisons;
-                    if(not used[i][j]) {
-                        word = board.position(i,j);
-                        used[i][j] = true;
-                        bool found = check_for_word(dict, word, board, board.around(i,j), used, max_length, stats);
-                        if(not found) used[i][j] = false;
-                    }
-                }
-                else timeup = true;
+        for(int j=0; j<board.getN() and not timeup; j++) {
+            ++stats.comparisons;
+            if(not used[i][j]) {
+                word = board.position(i,j);
+                used[i][j] = true;
+                bool found = check_for_word(dict, word, board, board.around(i,j), used, max_length, stats, tiempo, aux);
+                if(not found) used[i][j] = false;
             }
+            aux = clock();
+            timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
         }
-        else timeup = true;
     }
 
     stats.clock_end = clock();
@@ -62,23 +54,29 @@ void greedy(Dictionary & dictionary, Board & board, Board::Stats & stats, int ti
 }
 
 
-bool check_for_word(Dictionary &dict, string word, Board &board, vector<Board::Cell> adj, vector<vector<bool> > &used, const int &l, Board::Stats &stats) {
+bool check_for_word(Dictionary &dict, string word, Board &board, vector<Board::Cell> adj, vector<vector<bool> > &used, const int &l, Board::Stats &stats, const int &tiempo, clock_t &aux) {
     bool found = false;
+    aux = clock();
+    bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
 
     if(word.size() < l) {
-        for(int i=0; i<adj.size(); i++) {
+        for(int i=0; i<adj.size() and not timeup; i++) {
             ++stats.comparisons;
             if(not used[adj[i].i][adj[i].j]) {
                 string s = word + adj[i].val;
                 if(search_prefix(s, dict)) {
                     used[adj[i].i][adj[i].j] = true;
-                    found = check_for_word(dict, s, board, board.around(adj[i].i,adj[i].j), used, l, stats);
+                    found = check_for_word(dict, s, board, board.around(adj[i].i,adj[i].j), used, l, stats, tiempo, aux);
                     if(not found) used[adj[i].i][adj[i].j] = false;
                     else return true;
                 }
             }
+            aux = clock();
+            timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
         }
     }
+
+    if(timeup) return false;
 
     found = search_word_g(word, dict);
     if(found) {
@@ -86,7 +84,6 @@ bool check_for_word(Dictionary &dict, string word, Board &board, vector<Board::C
         stats.score += word.size();
     }
 
-    cout << endl;
     return found;
 }
 
@@ -100,6 +97,7 @@ bool search_prefix(string s, Dictionary &dict) {
             while(i<s.size() and s[i]==word[i]) i++;
             if(i == s.size()) return true;
         }
+        it++;
     }
 
     return false;

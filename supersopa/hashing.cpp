@@ -129,34 +129,25 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     string word = "";
 
     stats.clock_begin = clock();
+    clock_t aux = clock();
+    bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
 
-    bool timeup = false;
     for(int i = 0; i < board.getN() and not timeup; i++) {
-
-        clock_t aux = clock();
-        if (tiempo == 0 or tiempo > (int(aux - stats.clock_begin) / CLOCKS_PER_SEC)) {
-
-            for(int j = 0; j < board.getN() and not timeup; j++) {
-
-                clock_t aux2 = clock();
-                if (tiempo == 0 or tiempo > (int(aux2 - stats.clock_begin) / CLOCKS_PER_SEC)) {
-
-                    if(!used[i][j]) {
-                        stats.comparisons++;
-                        used[i][j] = true;
-                        word = board.position(i,j);
-                        found = check_for_word(word, board, dict, hdict, board.around(i,j), used, prime, hash_method, max_length, stats);
-                        if(!found) used[i][j] = false;
-                        else {
-                            found = false;
-                            stats.found++;
-                        }
-                    }
+        for(int j = 0; j < board.getN() and not timeup; j++) {
+            if(!used[i][j]) {
+                stats.comparisons++;
+                used[i][j] = true;
+                word = board.position(i,j);
+                found = check_for_word(word, board, dict, hdict, board.around(i,j), used, prime, hash_method, max_length, stats, tiempo, aux);
+                if(!found) used[i][j] = false;
+                else {
+                    found = false;
+                    stats.found++;
                 }
-                else timeup = true;
             }
+            aux = clock();
+            timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
         }
-        else timeup = true;
     }
 
     stats.clock_end = clock();
@@ -180,23 +171,29 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     output.close();
 }
 
-bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &prime, const int &hash_method, const int &l, Board::Stats & stats) {
+bool check_for_word(string word, Board &board, Dictionary &dict, vector<int> &hdict, vector<Board::Cell> v, vector<vector<bool> > &used, const int &prime, const int &hash_method, const int &l, Board::Stats & stats, const int &tiempo, clock_t &aux) {
     bool found = false;
     string s = "";
+    aux = clock();
+    bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
 
     if(word.size() < l) {
-        for(int i = 0; i < v.size(); i++) {
+        for(int i = 0; i < v.size() and not timeup; i++) {
             if(not used[v[i].i][v[i].j]) {
                 stats.comparisons++;
 
                 used[v[i].i][v[i].j] = true;
                 s = word + v[i].val;
-                found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, prime, hash_method, l, stats);
+                found = check_for_word(s, board, dict, hdict, board.around(v[i].i,v[i].j), used, prime, hash_method, l, stats, tiempo, aux);
                 if(not found) used[v[i].i][v[i].j] = false;
                 else return true;
             }
+            aux = clock();
+            timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
         }
     }
+
+    if(timeup) return false;
 
     if(hdict[custom_hash(word, hdict.size(), prime, hash_method)] > 0) {
         found = search_word_h(word, dict);

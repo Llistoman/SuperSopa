@@ -52,13 +52,14 @@ int main()
         cin >> seed;
         cout << "Introduce el tiempo en segundos para resolver (0 para tiempo infinito)" << endl;
         cin >> tiempo;
-        cout << "Escrbe el nombre del archivo donde se guardara el tablero (las soluciones" << endl;
+        cout << "Escribe el nombre del archivo donde se guardara el tablero (las soluciones" << endl;
         cout << "de los algoritmos también utilizaran archivos con ese nombre añadiendo '_sol')" << endl;
         cout << "No pongas extension, el archivo tendra formato txt" << endl;
         cin >> file1;
-        cout << "Escrbe el nombre del archivo donde se guardaran las palabras del diccionario" << endl;
+        cout << "Escribe el nombre del archivo donde se guardaran las palabras del diccionario" << endl;
         cout << "No pongas extension, el archivo tendra formato txt" << endl;
         cin >> file2;
+        cout << endl << "Generando... " << endl;
     }
 
     Board board(n,file1);
@@ -73,6 +74,7 @@ int main()
         cin >> file2;
         cout << "Introduce el tiempo en segundos para resolver (0 para tiempo infinito)" << endl;
         cin >> tiempo;
+        cout << endl << "Generando... " << endl;
 
         board = Board(file1);
         dictionary = Dictionary(file2);
@@ -81,6 +83,8 @@ int main()
         board.generateBoard(seed);
         dictionary.generateWords(seed);
     }
+
+    cout << "Listo." << endl << endl;
 
     cout << "Que algoritmo deseas probar?" << endl;
     cout << "0 - Naive (voraz que mira palabras iterativamente)" << endl;
