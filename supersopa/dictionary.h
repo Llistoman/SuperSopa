@@ -35,10 +35,12 @@ public:
     void changeK(int K);
     void changeRange(int range1, int range2);
     void changeOutputFile(string output);
+    bool contains(string w);
     void generateWords(int seed);
     void eraseWord(string w);
     list<string>::iterator begin();
     list<string>::iterator end();
+    bool empty();
 };
 
 #endif // DICTIONARY_H

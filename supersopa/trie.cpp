@@ -91,11 +91,8 @@ bool Trie::deleteStr(Node *n, string str, int level)
     {
         if(level==str.size())
         {
-            if(n->isLeaf and isFree(n))
-            {
-                n->isLeaf=false;
-                return true;
-            }
+            if(n->isLeaf) n->isLeaf=false;
+            if(isFree(n)) return true;
             return false;
         }
 
@@ -112,4 +109,8 @@ bool Trie::deleteStr(Node *n, string str, int level)
         return false;
     }
     return true;
+}
+
+bool Trie::empty() {
+    return isFree(root);
 }

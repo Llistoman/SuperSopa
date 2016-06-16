@@ -9,7 +9,7 @@ int next_prime(int n) {
     int sqrt_n = sqrt(n);
     while(not is_prime) {
         //asumimos que n es primo y comprobamos que no lo sea
-        is_prime = true;
+        is_prime = (n % 3 == 0);
 
         for(int i = 5; i < sqrt_n and is_prime; i += 6) {
             if(n % i == 0) is_prime = false;
@@ -43,7 +43,7 @@ int hash_sum(string s, int n, int k) {
 
 int hash_read(string s, int n, int k) {
     long key = stoi(s,nullptr,10)*k;
-    key = key % n;
+    key = abs(key) % n;
     return key;
 }
 
@@ -73,15 +73,20 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     int hashN = 0;
     int prime = 0;
     int repetitions = 0;
+    //Hacemos copia del diccionario para poder eliminar palabras
     Dictionary dict = dictionary;
     vector<int> hdict;
 
     cout << "Hashing method used: ";
-    if((dictionary.getRange().second - dictionary.getRange().first) > dictionary.getK())
+    if((dictionary.getRange().second - dictionary.getRange().first) > dictionary.getK()) {
         prime = (dictionary.getRange().second - dictionary.getRange().first) % dictionary.getK();
-    else prime = dictionary.getK() % (dictionary.getRange().second - dictionary.getRange().first);
+    }
+    else {
+        prime = dictionary.getK() % (dictionary.getRange().second - dictionary.getRange().first);
+    }
     prime = prime*3;
     prime = next_prime(prime);
+    hashN = dictionary.getK()*dictionary.getK();
 
     switch(hash_method) {
     //caso base es busqueda naive del siguiente primo (ver default)
@@ -91,7 +96,6 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     //es suficiente primalidad
     //SUM OF BASE 'PRIME' DIGITS
     case 1:
-        hashN = (dictionary.getK()*dictionary.getK());
         prime = prime % hashN;
         cout << "SUM OF BASE " << prime << " DIGITS" << endl;
         break;
@@ -99,22 +103,23 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
         //caso 2 es usando el propio numero representado para el calc del modulo
         //NUM MOD NEXT PRIME
     case 2:
-        hashN = next_prime(dictionary.getK()*dictionary.getK());
+        hashN = next_prime(hashN);
         prime = prime % hashN;
         cout << "NUM MOD " << prime << endl;
         break;
 
     default:
-        hashN = next_prime(dictionary.getK()*dictionary.getK());
+        hashN = next_prime(hashN);
         prime = prime % hashN;
         cout << "SUM MOD " << prime << endl;
         break;
     }
 
     hdict = vector<int>(hashN, 0);
-    cout << "Hash dict. size: " << hashN << endl;
+    cout << "Hash dict. size: " << hdict.size() << endl;
     for(int i=0; i<dict.getK(); i++) {
-        hdict[custom_hash(dict.getWord(i), hdict.size(), prime, hash_method)]++;
+        int key = custom_hash(dict.getWord(i), hdict.size(), prime, hash_method);
+        hdict[key]++;
         if(dict.getWord(i).size() > max_length) max_length = dict.getWord(i).size();
     }
 
@@ -132,8 +137,8 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
     clock_t aux = clock();
     bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
 
-    for(int i = 0; i < board.getN() and not timeup; i++) {
-        for(int j = 0; j < board.getN() and not timeup; j++) {
+    for(int i = 0; i < board.getN() and not timeup and not dict.empty(); i++) {
+        for(int j = 0; j < board.getN() and not timeup and not dict.empty(); j++) {
             if(!used[i][j]) {
                 stats.comparisons++;
                 used[i][j] = true;
@@ -154,7 +159,7 @@ void by_bloom(Dictionary & dictionary, Board & board, int hash_method, Board::St
 
     // SOLUTION:
     ofstream output;
-    string f = board.getOutputFile() + "_hash_" + to_string(hash_method) + "_sol.txt";
+    string f = board.getOutputFile() + "_hash" + to_string(hash_method) + "_sol.txt";
     output.open(f);
     for(int i=0; i<board.getN(); i++) {
         for(int j=0; j<board.getN(); j++) {

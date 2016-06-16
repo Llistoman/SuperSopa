@@ -19,8 +19,8 @@ void trie_alg(Dictionary & dictionary, Board & board, Board::Stats & stats, int 
     clock_t aux = clock();
     bool timeup = (tiempo != 0 and tiempo <= (int(aux - stats.clock_begin) / CLOCKS_PER_SEC));
 
-    for(int i=0; i<board.getN() and not timeup; i++) {
-        for(int j=0; j<board.getN() and not timeup; j++) {
+    for(int i=0; i<board.getN() and not timeup and not trie.empty(); i++) {
+        for(int j=0; j<board.getN() and not timeup and not trie.empty(); j++) {
             ++stats.comparisons;
             if(not used[i][j]) {
                 word = board.position(i,j);

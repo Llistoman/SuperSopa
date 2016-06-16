@@ -31,6 +31,7 @@ public:
     bool search(Node *n, string str);
     bool isFree(Node *n);
     bool deleteStr(Node *n, string str,int level);
+    bool empty();
 };
 
 #endif // TRIE_H
